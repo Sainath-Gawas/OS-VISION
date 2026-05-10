@@ -304,6 +304,70 @@
             color: var(--neon-red);
             font-weight: bold;
         }
+
+        /* --- MOBILE RESPONSIVENESS FOR GAME --- */
+        @media (max-width: 850px) {
+            body {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+                gap: 15px;
+            }
+
+            /* Stack all panels vertically */
+            .panel {
+                width: 100% !important;
+                max-width: 450px; /* Prevents them from getting too wide on tablets */
+                box-sizing: border-box;
+            }
+
+            .left-panel, .center-panel, .right-panel {
+                align-items: stretch;
+            }
+
+            /* Make the incoming file box wider on mobile */
+            .incoming-box {
+                padding: 10px;
+            }
+            .file-size {
+                font-size: 2em;
+            }
+
+            /* Adjust the Disk Grid so blocks remain visible */
+            #disk-grid {
+                gap: 2px;
+                margin-top: 10px;
+            }
+
+            .block {
+                font-size: 0.9em; /* slightly smaller text so it fits */
+                border-radius: 2px;
+            }
+
+            /* Make buttons huge and thumb-friendly */
+            .btn {
+                padding: 15px;
+                font-size: 1.1em;
+                margin-bottom: 5px;
+            }
+
+            /* Keep log compact so it doesn't take over the screen */
+            #game-log {
+                height: 150px;
+            }
+
+            /* Fix Briefing Screen for small phones */
+            .briefing-box {
+                padding: 20px;
+                max-width: 90%;
+            }
+            .briefing-box h1 {
+                font-size: 1.5em;
+            }
+            .briefing-box h2 {
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 
