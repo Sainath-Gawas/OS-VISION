@@ -20,7 +20,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #03030a; /* Deeper, richer black base */
+            background-color: #03030a;
             color: var(--text-main);
             margin: 0;
             padding: 0;
@@ -28,15 +28,15 @@
             overflow-x: hidden;
         }
 
-        /* Ambient Animated Neon Flares */
-        body::before, body::after {
+        body::before,
+        body::after {
             content: '';
             position: fixed;
             width: 70vw;
             height: 70vh;
             border-radius: 50%;
             z-index: -2;
-            filter: blur(120px); /* Creates the soft atmospheric glow */
+            filter: blur(120px);
             opacity: 0.15;
             animation: floatFlares 20s infinite alternate ease-in-out;
             pointer-events: none;
@@ -52,37 +52,40 @@
             background: var(--neon-purple);
             bottom: -20%;
             right: -10%;
-            animation-delay: -10s; /* Makes them move out of sync */
+            animation-delay: -10s;
         }
 
         @keyframes floatFlares {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
-            50% { transform: translate(5vw, 5vh) scale(1.1); opacity: 0.25; }
-            100% { transform: translate(-5vw, 8vh) scale(0.9); opacity: 0.15; }
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.15;
+            }
+
+            50% {
+                transform: translate(5vw, 5vh) scale(1.1);
+                opacity: 0.25;
+            }
+
+            100% {
+                transform: translate(-5vw, 8vh) scale(0.9);
+                opacity: 0.15;
+            }
         }
 
-        /* 3D Holographic Grid Overlay */
         .bg-grid {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* Brighter grid lines */
             background-image:
                 linear-gradient(rgba(0, 229, 255, 0.07) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 229, 255, 0.07) 1px, transparent 1px);
             background-size: 45px 45px;
             z-index: -1;
-            /* Fades the grid out at the edges of the screen for a 3D effect */
-            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 80%);
-            -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 90%);
+            mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0) 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 90%);
             animation: panGrid 15s linear infinite;
-        }
-
-        @keyframes panGrid {
-            0% { background-position: 0px 0px; }
-            100% { background-position: 45px 45px; }
         }
 
         @keyframes panGrid {
@@ -91,7 +94,7 @@
             }
 
             100% {
-                background-position: 40px 40px;
+                background-position: 45px 45px;
             }
         }
 
@@ -512,6 +515,62 @@
             font-size: 0.95em;
             white-space: pre-wrap;
         }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .hero h1 {
+                font-size: 2.2em;
+            }
+
+            .intro-section {
+                padding: 20px;
+            }
+
+            .typewriter-title {
+                font-size: 0.9em;
+                animation: none;
+                width: 100%;
+                border-right: none;
+                white-space: normal;
+            }
+
+            .lab-panel {
+                min-width: 100%;
+                /* Fixes the horizontal scrolling issue */
+            }
+
+            .term-controls {
+                flex-direction: column;
+            }
+
+            .term-controls input,
+            .term-controls select,
+            .term-controls .btn {
+                width: 100% !important;
+                margin-top: 5px !important;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            iframe {
+                height: 850px !important;
+                /* Give game slightly more height on mobile to prevent clipping */
+            }
+        }
     </style>
 </head>
 
@@ -721,7 +780,8 @@
                             <button class="btn"
                                 style="margin-top: 0; padding: 8px 15px; border-color: #ef4444; color: #ef4444;"
                                 onclick="deleteFile()">Del</button>
-                            <button class="btn" style="margin-top: 0; padding: 8px 15px; border-color: #f59e0b; color: #f59e0b;"
+                            <button class="btn"
+                                style="margin-top: 0; padding: 8px 15px; border-color: #f59e0b; color: #f59e0b;"
                                 onclick="formatDisk()">Format</button>
                         </div>
                         <div class="term-screen" id="term-out">System initialized. Memory array ready...<br>Awaiting
@@ -833,11 +893,11 @@
         }
 
         function formatDisk() {
-                disk = Array(100).fill('.');
-                meta = {};
-                printLog(">> WARNING: SYSTEM FORMATTED. ALL DATA CLEARED.");
-                drawMap();
-            }
+            disk = Array(100).fill('.');
+            meta = {};
+            printLog(">> WARNING: SYSTEM FORMATTED. ALL DATA CLEARED.");
+            drawMap();
+        }
 
         function deleteFile() {
             let id = document.getElementById('sim-id').value.toUpperCase();
@@ -862,7 +922,7 @@
     </script>
     <footer
         style="text-align: center; padding: 30px; color: #64748b; margin-top: 40px; border-top: 1px solid rgba(0, 229, 255, 0.1); font-family: monospace;">
-        SYSTEM BUILD v1.0.4 | DEVELOPED BY SAINATH GAWAS | OS PROJECT 2026
+        SYSTEM BUILD v1.0.4 | DEVELOPED BY | OS PROJECT 2026
     </footer>
 </body>
 
