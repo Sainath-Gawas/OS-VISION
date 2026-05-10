@@ -93,29 +93,9 @@ Warehouse-based futuristic analogy explaining file allocation concepts visually.
 ---
 
 ## 🌐 Live Website
-
-(Add Your GitHub Pages Link Here)
-
-Example:
-https://yourusername.github.io/os-vision-file-allocation/
+https://sainath-gawas.github.io/OS-VISION/
 
 ---
-
-## 📸 Screenshots
-
-(Add screenshots here if needed)
-
----
-
-## ⚠️ Note
-
-For the best experience, the website is recommended to be viewed on desktop/laptop screens.
-
----
-
-## 👨‍💻 Developed By
-
-[Your Name]
 
 Operating Systems Mini Project  
 Information Technology Engineering
@@ -125,9 +105,6 @@ Information Technology Engineering
 ## 📖 References
 
 - Operating System Concepts — Abraham Silberschatz
-- Modern Operating Systems — Andrew S. Tanenbaum
 - GeeksforGeeks
-- Python Documentation
-- W3Schools
 
 ---
