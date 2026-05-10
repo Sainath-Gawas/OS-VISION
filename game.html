@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disk Allocation Challenge</title>
+    <style>
+        /* Cyberpunk Theme Variables */
+        :root {
+            --bg-base: #060611;
+            --neon-cyan: #00e5ff;
+            --neon-purple: #b026ff;
+            --neon-orange: #ffaa00;
+            --neon-red: #ff3366;
+            --glass-bg: rgba(16, 18, 38, 0.8);
+            --text-main: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Layout Panels */
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .left-panel {
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .center-panel {
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .right-panel {
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        h2,
+        h3 {
+            margin: 0;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Incoming File Box */
+        .incoming-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed var(--neon-purple);
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .incoming-box.pulse {
+            transform: scale(1.05);
+            border-color: var(--neon-red);
+        }
+
+        .file-size {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        /* Disk Grid */
+        #disk-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 4px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .block {
+            aspect-ratio: 1;
+            background-color: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #fff;
+            transition: 0.3s;
+        }
+
+        .block.free {
+            background-color: #0f172a;
+        }
+
+        .block.contiguous {
+            background-color: rgba(0, 229, 255, 0.2);
+            border-color: var(--neon-cyan);
+            box-shadow: inset 0 0 8px rgba(0, 229, 255, 0.3);
+        }
+
+        .block.linked {
+            background-color: rgba(176, 38, 255, 0.2);
+            border-color: var(--neon-purple);
+            box-shadow: inset 0 0 8px rgba(176, 38, 255, 0.3);
+        }
+
+        .block.indexed {
+            background-color: rgba(255, 170, 0, 0.2);
+            border-color: var(--neon-orange);
+            box-shadow: inset 0 0 8px rgba(255, 170, 0, 0.3);
+        }
+
+        .block.index-node {
+            background-color: var(--neon-orange);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-orange);
+        }
+
+        /* Stats & Meters */
+        .stat-box {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .val-good {
+            color: var(--neon-cyan);
+        }
+
+        .val-warn {
+            color: var(--neon-orange);
+        }
+
+        .val-danger {
+            color: var(--neon-red);
+        }
+
+        .timer-text {
+            font-size: 1.2em;
+            text-shadow: 0 0 8px var(--neon-red);
+        }
+
+        /* Buttons */
+        .btn {
+            background: rgba(0, 229, 255, 0.05);
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            padding: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+        }
+
+        .btn-linked {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+        }
+
+        .btn-linked:hover {
+            background: var(--neon-purple);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.5);
+        }
+
+        .btn-indexed {
+            border-color: var(--neon-orange);
+            color: var(--neon-orange);
+        }
+
+        .btn-indexed:hover {
+            background: var(--neon-orange);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
+        }
+
+        /* Game Log */
+        #game-log {
+            height: 250px;
+            overflow-y: auto;
+            background: #000;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9em;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .log-entry {
+            padding-bottom: 5px;
+            border-bottom: 1px solid #222;
+        }
+
+        .log-success {
+            color: var(--neon-cyan);
+        }
+
+        .log-penalty {
+            color: var(--neon-red);
+        }
+
+        .log-event {
+            color: var(--neon-orange);
+            font-weight: bold;
+        }
+
+        /* Overlays */
+        .overlay-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(6, 6, 17, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        /* Mission Briefing Modal */
+        .briefing-box {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 700px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+            text-align: left;
+        }
+
+        .briefing-box h1 {
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .briefing-box h2 {
+            color: var(--neon-purple);
+            border: none;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .briefing-box ul {
+            padding-left: 20px;
+            color: #cbd5e1;
+        }
+
+        .briefing-box li {
+            margin-bottom: 10px;
+        }
+
+        .briefing-box strong {
+            color: #fff;
+        }
+
+        .highlight-strike {
+            color: var(--neon-red);
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="start-screen" class="overlay-screen">
+        <div class="briefing-box">
+            <h1>TERMINAL ACCESS GRANTED</h1>
+            <h2>>>> MISSION BRIEFING: DISK ALLOCATION CHALLENGE <<< </h2>
+                    <p>Welcome, System Administrator. Files are arriving at rapid speeds. Your task is to select the
+                        most efficient allocation algorithm to store them on the physical disk.</p>
+
+                    <h3 style="margin-top: 20px;">RULES OF ENGAGEMENT:</h3>
+                    <ul>
+                        <li><strong>Objective:</strong> Reach <strong>300 points</strong> before the 60-second timer
+                            expires!</li>
+                        <li><strong>Contiguous (1):</strong> Best for speed (+15 pts). Needs an unbroken line of empty
+                            blocks. Fails if memory is fragmented.</li>
+                        <li><strong>Linked (2):</strong> Flexible but slower (+12 pts). Scatters blocks into any free
+                            space.</li>
+                        <li><strong>Indexed (3):</strong> Highly efficient for gaps (+20 pts). Scatters data but
+                            requires 1 extra block to store the 'Index Map'.</li>
+                    </ul>
+
+                    <h3 style="margin-top: 20px; color: var(--neon-red);">WARNINGS & STRIKES:</h3>
+                    <ul>
+                        <li><strong>Dynamic Deletion:</strong> Old files will occasionally be purged, leaving fragmented
+                            "gaps" in the disk. Adapt your strategy!</li>
+                        <li><strong><span class="highlight-strike">What is a Strike?</span></strong> If you attempt an
+                            allocation that fails (e.g., selecting Contiguous when the space is too fragmented, or
+                            running out of disk space), you receive a Strike and lose points.</li>
+                        <li><strong>3 Strikes = GAME OVER (SYSTEM FAILURE).</strong></li>
+                    </ul>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn" onclick="initGame()">Acknowledge & Start</button>
+                    </div>
+        </div>
+    </div>
+
+    <div id="end-screen" class="overlay-screen" style="display: none;">
+        <h1 id="end-title"
+            style="font-size: 4em; margin: 0; text-transform: uppercase; text-shadow: 0 0 20px currentColor;">Game Over
+        </h1>
+        <p id="end-desc" style="font-size: 1.5em; color: #aaa;">Disk critically fragmented.</p>
+        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">Reboot System</button>
+    </div>
+
+    <div class="panel left-panel">
+        <h2>Mission Status</h2>
+        <div class="stat-box"><span>Time Left:</span> <span id="time-val" class="val-good timer-text">60s</span></div>
+        <div class="stat-box"><span>Score:</span> <span id="score-val" class="val-good">0 / 300</span></div>
+        <div class="stat-box"><span>Used Space:</span> <span id="space-val">0%</span></div>
+        <div class="stat-box"><span>Fragmentation:</span> <span id="frag-val" class="val-good">0%</span></div>
+        <div class="stat-box"><span>Strikes:</span> <span id="strike-val" class="val-danger">0 / 3</span></div>
+
+        <h3 style="margin-top: 20px;">Incoming Data</h3>
+        <div class="incoming-box" id="inc-box">
+            <div id="file-name">SYSTEM.dat</div>
+            <div class="file-size" id="file-size">6</div>
+            <div>Blocks Required</div>
+        </div>
+    </div>
+
+    <div class="panel center-panel">
+        <h2>Physical Disk Array</h2>
+        <div id="disk-grid"></div>
+    </div>
+
+    <div class="panel right-panel">
+        <h2>Allocation Method</h2>
+        <button class="btn" onclick="allocate('contiguous')" id="btn-1" disabled>1. Contiguous</button>
+        <button class="btn btn-linked" onclick="allocate('linked')" id="btn-2" disabled>2. Linked</button>
+        <button class="btn btn-indexed" onclick="allocate('indexed')" id="btn-3" disabled>3. Indexed</button>
+
+        <h3 style="margin-top: 10px;">System Log</h3>
+        <div id="game-log"></div>
+    </div>
+
+    <script>
+        const DISK_SIZE = 100;
+        const TARGET_SCORE = 300;
+        let disk = Array(DISK_SIZE).fill(null);
+        let files = [];
+        let score = 0;
+        let strikes = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let gameActive = false;
+
+        let currentFile = { id: 'A', size: 6, name: 'SYS.dat' };
+        let fileIdCounter = 65;
+        const names = ["VIDEO.mp4", "DB_BACKUP.sql", "IMAGE.png", "SYSTEM.dll", "GAME.exe", "USER.dat", "LOGS.txt", "PAYLOAD.bin"];
+
+        // Init Empty Grid
+        const gridEl = document.getElementById('disk-grid');
+        for (let i = 0; i < DISK_SIZE; i++) {
+            let div = document.createElement('div');
+            div.className = 'block free';
+            div.id = `block-${i}`;
+            gridEl.appendChild(div);
+        }
+
+        // START GAME FUNCTION
+        function initGame() {
+            document.getElementById('start-screen').style.display = 'none';
+
+            // Enable buttons
+            document.getElementById('btn-1').disabled = false;
+            document.getElementById('btn-2').disabled = false;
+            document.getElementById('btn-3').disabled = false;
+
+            log("System booted. Memory blocks initialized.", "log-success");
+            log("Awaiting first allocation command...", "");
+
+            generateNextFile();
+
+            gameActive = true;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time-val').innerText = `${timeLeft}s`;
+                if (timeLeft <= 10) document.getElementById('time-val').className = 'val-danger timer-text pulse';
+
+                if (timeLeft <= 0) {
+                    endGame(false, "TIME EXPIRED.");
+                }
+            }, 1000);
+        }
+
+        function log(msg, type) {
+            const logBox = document.getElementById('game-log');
+            logBox.innerHTML += `<div class="log-entry ${type}">${msg}</div>`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function updateMeters() {
+            let used = disk.filter(b => b !== null).length;
+            document.getElementById('space-val').innerText = `${used}%`;
+            document.getElementById('space-val').className = used > 80 ? 'val-danger' : used > 50 ? 'val-warn' : 'val-good';
+
+            let freeBlocks = disk.reduce((acc, val, idx) => val === null ? acc.concat(idx) : acc, []);
+            let maxContiguous = 0;
+            let currentStreak = 0;
+            for (let i = 0; i < DISK_SIZE; i++) {
+                if (disk[i] === null) { currentStreak++; maxContiguous = Math.max(maxContiguous, currentStreak); }
+                else currentStreak = 0;
+            }
+
+            let fragPercent = 0;
+            if (freeBlocks.length > 0) {
+                fragPercent = Math.round((1 - (maxContiguous / freeBlocks.length)) * 100);
+            }
+
+            document.getElementById('frag-val').innerText = `${fragPercent}%`;
+            document.getElementById('frag-val').className = fragPercent > 50 ? 'val-danger' : fragPercent > 20 ? 'val-warn' : 'val-good';
+
+            document.getElementById('score-val').innerText = `${score} / ${TARGET_SCORE}`;
+            document.getElementById('strike-val').innerText = `${strikes} / 3`;
+
+            // Win/Loss conditions
+            if (score >= TARGET_SCORE) endGame(true, "Target Score Reached!");
+            if (strikes >= 3) endGame(false, "Maximum strikes reached.");
+            if (used === 100) endGame(false, "Disk Capacity Full.");
+        }
+
+        function generateNextFile() {
+            fileIdCounter++;
+            if (fileIdCounter > 90) fileIdCounter = 65;
+
+            // Size 4 to 12
+            currentFile = {
+                id: String.fromCharCode(fileIdCounter),
+                size: Math.floor(Math.random() * 9) + 4,
+                name: names[Math.floor(Math.random() * names.length)]
+            };
+
+            document.getElementById('file-name').innerText = currentFile.name;
+            document.getElementById('file-size').innerText = currentFile.size;
+
+            // Visual feedback
+            const incBox = document.getElementById('inc-box');
+            incBox.classList.add('pulse');
+            setTimeout(() => incBox.classList.remove('pulse'), 200);
+
+            // AGGRESSIVE FRAGMENTATION EVENT
+            if (files.length > 3 && Math.random() < 0.40) {
+                let randomIndex = Math.floor(Math.random() * files.length);
+                let toDelete = files.splice(randomIndex, 1)[0];
+                let fileIdOnly = toDelete.split('-')[0];
+
+                for (let i = 0; i < DISK_SIZE; i++) {
+                    if (disk[i] && disk[i].includes(fileIdOnly)) {
+                        disk[i] = null;
+                    }
+                }
+                log(`[EVENT] SYSTEM PURGE: File ${fileIdOnly} removed. Fragmentation detected!`, 'log-event');
+                drawDisk();
+                updateMeters();
+            }
+        }
+
+        function drawDisk() {
+            for (let i = 0; i < DISK_SIZE; i++) {
+                let el = document.getElementById(`block-${i}`);
+                if (disk[i] === null) {
+                    el.className = 'block free';
+                    el.innerText = '';
+                } else if (disk[i].includes('Idx-')) {
+                    el.className = 'block index-node';
+                    el.innerText = 'I';
+                } else {
+                    el.innerText = disk[i].split('-')[0];
+                    let method = disk[i].split('-')[1];
+                    el.className = `block ${method}`;
+                }
+            }
+        }
+
+        function allocate(method) {
+            if (!gameActive) return;
+
+            let freeBlocks = disk.reduce((acc, val, idx) => val === null ? acc.concat(idx) : acc, []);
+            let reqSize = method === 'indexed' ? currentFile.size + 1 : currentFile.size;
+            let success = false;
+            let logMsg = "";
+
+            if (method === 'contiguous') {
+                let startIdx = -1, streak = 0;
+                for (let i = 0; i < DISK_SIZE; i++) {
+                    if (disk[i] === null) {
+                        if (streak === 0) startIdx = i;
+                        streak++;
+                        if (streak === reqSize) { success = true; break; }
+                    } else { streak = 0; }
+                }
+
+                if (success) {
+                    for (let i = startIdx; i < startIdx + reqSize; i++) disk[i] = `${currentFile.id}-contiguous`;
+                    score += 15;
+                    logMsg = `<span class="log-success">+15 Pts: Contiguous File Written</span>`;
+                } else {
+                    if (freeBlocks.length >= reqSize) {
+                        strikes++;
+                        score -= 10;
+                        logMsg = `<span class="log-penalty">-10 Pts: STRIKE ${strikes}/3. Fragmentation detected. Blocks available but not sequential.</span>`;
+                    } else {
+                        strikes++;
+                        logMsg = `<span class="log-penalty">STRIKE ${strikes}/3: Not enough total space.</span>`;
+                    }
+                }
+            }
+            else if (method === 'linked') {
+                if (freeBlocks.length >= reqSize) {
+                    let shuffled = freeBlocks.sort(() => 0.5 - Math.random()).slice(0, reqSize);
+                    for (let b of shuffled) disk[b] = `${currentFile.id}-linked`;
+                    score += 12;
+                    success = true;
+                    logMsg = `<span class="log-success">+12 Pts: Linked Allocation Spanning Gaps</span>`;
+                } else { strikes++; logMsg = `<span class="log-penalty">STRIKE ${strikes}/3: Disk Full.</span>`; }
+            }
+            else if (method === 'indexed') {
+                if (freeBlocks.length >= reqSize) {
+                    let shuffled = freeBlocks.sort(() => 0.5 - Math.random()).slice(0, reqSize);
+                    let indexNode = shuffled.shift();
+                    disk[indexNode] = `Idx-${currentFile.id}`;
+                    for (let b of shuffled) disk[b] = `${currentFile.id}-indexed`;
+                    score += 20;
+                    success = true;
+                    logMsg = `<span class="log-success">+20 Pts: Indexed Allocation Created (+Overhead)</span>`;
+                } else { strikes++; logMsg = `<span class="log-penalty">STRIKE ${strikes}/3: Disk Full.</span>`; }
+            }
+
+            log(`Writing ${currentFile.id} (${currentFile.size} blks) via ${method.toUpperCase()}...`, '');
+            log(logMsg, '');
+
+            if (success) files.push(`${currentFile.id}-${method}`);
+
+            drawDisk();
+            updateMeters();
+            if (strikes < 3 && score < TARGET_SCORE && timeLeft > 0) generateNextFile();
+        }
+
+        function endGame(win, desc) {
+            gameActive = false;
+            clearInterval(timerInterval);
+            const overlay = document.getElementById('end-screen');
+            overlay.style.display = 'flex';
+            const title = document.getElementById('end-title');
+            title.innerText = win ? 'SYSTEM MASTERED' : 'SYSTEM FAILURE';
+            title.style.color = win ? 'var(--neon-cyan)' : 'var(--neon-red)';
+            document.getElementById('end-desc').innerText = desc + ` Final Score: ${score}`;
+        }
+    </script>
+</body>
+
+</html>
