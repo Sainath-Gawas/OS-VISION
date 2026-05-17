@@ -206,6 +206,7 @@
             padding-bottom: 10px;
         }
 
+        /* --- UPDATED INTRO & TYPEWRITER SECTION --- */
         .intro-section {
             background: rgba(0, 0, 0, 0.5);
             border-left: 3px solid var(--neon-cyan);
@@ -272,51 +273,53 @@
             }
         }
 
-        .intro-text,
-        .intro-list {
-            opacity: 0;
-            animation: fadeUp 1s both;
-        }
-
-        .intro-text {
+        .typewriter-body p {
             font-size: 1.15em;
             color: #cbd5e1;
             line-height: 1.8;
             margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeUp 1s both;
         }
 
-        .intro-list {
+        .typewriter-body ul {
             list-style: none;
             padding-left: 20px;
-            margin: 20px 0;
+            margin: 20px 0 30px;
+            opacity: 0;
+            animation: fadeUp 1s both;
         }
 
-        .intro-text:nth-child(2) {
+        /* Timings for typewriter lines */
+        .typewriter-body p:nth-child(1) {
             animation-delay: 2.0s;
         }
 
-        .intro-text:nth-child(3) {
+        .typewriter-body p:nth-child(2) {
             animation-delay: 3.0s;
         }
 
-        .intro-text:nth-child(4) {
+        .typewriter-body ul {
             animation-delay: 4.0s;
         }
 
-        .intro-text:nth-child(5) {
-            animation-delay: 5.0s;
+        .typewriter-body li {
+            position: relative;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.1em;
+            letter-spacing: 1px;
         }
 
-        .intro-list {
-            animation-delay: 6.0s;
-        }
-
-        .intro-text:nth-child(7) {
-            animation-delay: 7.0s;
-        }
-
-        .intro-text:nth-child(8) {
-            animation-delay: 8.0s;
+        .typewriter-body li::before {
+            content: '>';
+            position: absolute;
+            left: -25px;
+            color: var(--neon-purple);
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+            text-shadow: 0 0 8px var(--neon-purple);
         }
 
         @keyframes fadeUp {
@@ -331,25 +334,6 @@
             }
         }
 
-        .intro-list li {
-            position: relative;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #fff;
-            font-size: 1.1em;
-            letter-spacing: 1px;
-        }
-
-        .intro-list li::before {
-            content: '>';
-            position: absolute;
-            left: -25px;
-            color: var(--neon-purple);
-            font-weight: bold;
-            animation: pulse 1.5s infinite;
-            text-shadow: 0 0 8px var(--neon-purple);
-        }
-
         @keyframes pulse {
 
             0%,
@@ -362,8 +346,116 @@
             }
         }
 
-        .intro-section.animation-finished .intro-text,
-        .intro-section.animation-finished .intro-list,
+        /* --- ACCORDION STYLES --- */
+        .accordion-container {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .accordion {
+            background-color: rgba(0, 229, 255, 0.05);
+            color: var(--neon-cyan);
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 6px;
+            text-align: left;
+            outline: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            animation: fadeUp 1s both;
+        }
+
+        /* Timings to match the end of typewriter sequence */
+        .accordion:nth-child(1) {
+            animation-delay: 5.0s;
+        }
+
+        .accordion:nth-child(3) {
+            animation-delay: 5.2s;
+        }
+
+        .accordion:nth-child(5) {
+            animation-delay: 5.4s;
+        }
+
+        .accordion.active,
+        .accordion:hover {
+            background-color: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+        }
+
+        .accordion::after {
+            content: '\002B';
+            /* Plus icon */
+            font-size: 1.5em;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .accordion.active::after {
+            content: '\2212';
+            /* Minus icon */
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            padding: 0 18px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-left: 1px solid var(--neon-cyan);
+            border-right: 1px solid var(--neon-cyan);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease, margin 0.4s ease;
+            border-radius: 0 0 6px 6px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .accordion-content.show {
+            padding: 20px 18px;
+            border-bottom: 1px solid var(--neon-cyan);
+            margin-bottom: 20px;
+        }
+
+        .accordion-content h4 {
+            color: var(--neon-purple);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(176, 38, 255, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .accordion-content ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+
+        .accordion-content li {
+            margin-bottom: 8px;
+            color: #e2e8f0;
+        }
+
+        .highlight-keyword {
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .intro-section.animation-finished .typewriter-body p,
+        .intro-section.animation-finished .typewriter-body ul,
+        .intro-section.animation-finished .accordion,
         .intro-section.animation-finished .btn {
             animation: none !important;
             opacity: 1 !important;
@@ -376,6 +468,7 @@
             border-right: none !important;
         }
 
+        /* --- REST OF CSS --- */
         video,
         audio {
             width: 100%;
@@ -548,7 +641,6 @@
 
             .lab-panel {
                 min-width: 100%;
-                /* Fixes the horizontal scrolling issue */
             }
 
             .term-controls {
@@ -568,7 +660,6 @@
 
             iframe {
                 height: 850px !important;
-                /* Give game slightly more height on mobile to prevent clipping */
             }
         }
     </style>
@@ -598,34 +689,128 @@
             <div class="intro-section">
                 <div class="typewriter-title">> DECRYPTING STORAGE PROTOCOLS...</div>
 
-                <p class="intro-text">Every file stored inside a computer occupies physical memory blocks on a disk.</p>
+                <div class="typewriter-body">
+                    <p><strong>File Allocation Methods</strong> are techniques used by the Operating System to store
+                        files on secondary storage devices such as hard disks and solid-state drives. Since storage
+                        space is divided into fixed-size memory blocks, the Operating System must decide how these
+                        blocks will be allocated to files efficiently.</p>
 
-                <p class="intro-text">But storing files efficiently is one of the most important responsibilities of an
-                    Operating System.</p>
+                    <p>The main objectives of file allocation are:</p>
+                    <ul>
+                        <li>Efficient storage utilization</li>
+                        <li>Fast file access</li>
+                        <li>Reduced memory wastage</li>
+                        <li>Easy file management</li>
+                        <li>Better system performance</li>
+                    </ul>
+                </div>
 
-                <p class="intro-text">To manage storage, reduce fragmentation, and improve file access speed, Operating
-                    Systems use different File Allocation Methods.</p>
+                <div class="accordion-container">
+                    <button class="accordion">1. Contiguous Allocation</button>
+                    <div class="accordion-content">
+                        <p>Contiguous Allocation stores all blocks of a file in <span
+                                class="highlight-keyword">consecutive memory locations</span>. For example, if a file
+                            requires four blocks, the Operating System allocates four continuous blocks together on the
+                            disk.</p>
 
-                <p class="intro-text">The three major methods are:</p>
+                        <h4>Working Principle</h4>
+                        <p>The Operating System stores the <strong>Starting block address</strong> and the
+                            <strong>Length of the file</strong>. Using this information, any block of the file can be
+                            accessed directly and quickly.</p>
 
-                <ul class="intro-list">
-                    <li>Contiguous Allocation</li>
-                    <li>Linked Allocation</li>
-                    <li>Indexed Allocation</li>
-                </ul>
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>Very fast file access</li>
+                            <li>Simple implementation</li>
+                            <li>Efficient sequential access</li>
+                            <li>Supports direct access easily</li>
+                        </ul>
 
-                <p class="intro-text">Each method follows a different strategy for storing and accessing data blocks
-                    inside memory.</p>
+                        <h4>Disadvantages</h4>
+                        <ul>
+                            <li>Suffers from External Fragmentation</li>
+                            <li>Difficult to expand files dynamically</li>
+                            <li>Requires continuous free space</li>
+                        </ul>
 
-                <p class="intro-text"
-                    style="color: var(--neon-cyan); font-weight: bold; font-size: 1.25em; text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); margin-top: 30px;">
-                    This interactive platform explores how these allocation methods work through simulations,
-                    animations, visualizations, and interactive experiences.
-                </p>
+                        <h4>External Fragmentation</h4>
+                        <p>As files are created and deleted repeatedly, small free spaces appear between occupied
+                            blocks. Even if enough total memory exists, allocation may fail because sufficient
+                            continuous space is unavailable. This problem is called <strong>External
+                                Fragmentation</strong>.</p>
+                    </div>
 
-                <button onclick="showPage('page-lab')" class="btn"
-                    style="opacity: 0; animation: fadeUp 1s forwards; animation-delay: 8s;">Initialize
-                    Simulator</button>
+                    <button class="accordion">2. Linked Allocation</button>
+                    <div class="accordion-content">
+                        <p>Linked Allocation stores file blocks in <span class="highlight-keyword">different scattered
+                                locations</span> across the disk instead of continuous memory positions. Each block
+                            contains <strong>File data</strong> and a <strong>Pointer to the next block</strong>. The OS
+                            follows these pointers sequentially to access the complete file.</p>
+
+                        <h4>Working Principle</h4>
+                        <p>The directory stores the starting block address of the file. Each block points to the next
+                            block until the entire file is accessed.</p>
+
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>No External Fragmentation</li>
+                            <li>Supports dynamic file growth</li>
+                            <li>Better memory utilization</li>
+                            <li>Flexible storage allocation</li>
+                        </ul>
+
+                        <h4>Disadvantages</h4>
+                        <ul>
+                            <li>Slower file access</li>
+                            <li>Random access is inefficient</li>
+                            <li>Pointer storage creates overhead</li>
+                            <li>Corrupted pointers may break file chains</li>
+                        </ul>
+
+                        <h4>Key Feature</h4>
+                        <p>Linked Allocation allows files to grow dynamically because new blocks can be added anywhere
+                            on the disk.</p>
+                    </div>
+
+                    <button class="accordion">3. Indexed Allocation</button>
+                    <div class="accordion-content">
+                        <p>Indexed Allocation uses a special memory block called an <span
+                                class="highlight-keyword">Index Block</span>. The index block stores the addresses of
+                            all blocks belonging to a file. Instead of storing blocks continuously or linking them
+                            directly, the OS first accesses the index block and then locates the required data blocks.
+                        </p>
+
+                        <h4>Working Principle</h4>
+                        <p>Each file has <strong>One Index Block</strong> and <strong>Multiple scattered data
+                                blocks</strong>. The index block acts like a table containing references to all file
+                            locations.</p>
+
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>Supports direct access</li>
+                            <li>No External Fragmentation</li>
+                            <li>Efficient file retrieval</li>
+                            <li>Flexible memory allocation</li>
+                        </ul>
+
+                        <h4>Disadvantages</h4>
+                        <ul>
+                            <li>Requires additional memory for index block</li>
+                            <li>Slightly more complex implementation</li>
+                            <li>Small files may waste index space</li>
+                        </ul>
+
+                        <h4>Key Feature</h4>
+                        <p>Indexed Allocation combines flexibility and efficient access, making it one of the most
+                            effective allocation methods used in modern Operating Systems.</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button onclick="showPage('page-lab')" class="btn"
+                        style="opacity: 0; animation: fadeUp 1s forwards; animation-delay: 6.5s; margin-top: 30px;">Initialize
+                        Simulator</button>
+                </div>
             </div>
 
             <div class="card">
@@ -802,133 +987,8 @@
 
     </div>
 
-    <script>
-        function showPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active-link'));
-            document.getElementById(pageId).classList.add('active');
-            document.getElementById(pageId.replace('page-', 'nav-')).classList.add('active-link');
-            window.scrollTo(0, 0);
-        }
+    <script src="simulator.js"></script>
 
-        let disk = Array(100).fill('.');
-        let meta = {};
-
-        function printLog(text) {
-            const screen = document.getElementById('term-out');
-            screen.innerHTML += '\n' + text;
-            screen.scrollTop = screen.scrollHeight;
-        }
-
-        function getFree() {
-            let free = [];
-            for (let i = 0; i < 100; i++) if (disk[i] === '.') free.push(i);
-            return free;
-        }
-
-        function drawMap() {
-            let map = "\n========================================\n          CURRENT DISK MAP\n========================================\n";
-            for (let i = 0; i < 100; i += 10) {
-                let row = disk.slice(i, i + 10).join("  ");
-                map += `Block ${i === 0 ? '00' : (i < 10 ? '0' + i : i)} | ${row}\n`;
-            }
-            map += "========================================\nLegend: '.'=Free | 'I'=Index | Letter=Data\n";
-            printLog(map);
-        }
-
-        function executeCommand() {
-            let method = document.getElementById('sim-method').value;
-            let id = document.getElementById('sim-id').value.toUpperCase();
-            let size = parseInt(document.getElementById('sim-size').value);
-
-            if (!id || !id.match(/[A-Z]/)) return printLog("!! Error: Enter a single letter (A-Z).");
-            if (meta[id]) return printLog("!! Error: File exists.");
-            if (!size || size < 1) return printLog("!! Error: Enter valid size.");
-
-            let success = false;
-            let typeName = "";
-
-            if (method === "1") {
-                typeName = "Contiguous";
-                let count = 0, start = -1;
-                for (let i = 0; i < 100; i++) {
-                    if (disk[i] === '.') {
-                        if (count === 0) start = i;
-                        count++;
-                        if (count === size) {
-                            let blocks = [];
-                            for (let j = start; j < start + size; j++) { disk[j] = id; blocks.push(j); }
-                            meta[id] = { type: "Contiguous", blocks: blocks };
-                            success = true; break;
-                        }
-                    } else count = 0;
-                }
-            }
-            else if (method === "2") {
-                typeName = "Linked";
-                let free = getFree();
-                if (free.length >= size) {
-                    let blocks = [];
-                    for (let i = 0; i < size; i++) {
-                        let randIdx = free.splice(Math.floor(Math.random() * free.length), 1)[0];
-                        disk[randIdx] = id; blocks.push(randIdx);
-                    }
-                    meta[id] = { type: "Linked", blocks: blocks };
-                    success = true;
-                }
-            }
-            else if (method === "3") {
-                typeName = "Indexed";
-                let free = getFree();
-                if (free.length >= size + 1) {
-                    let blocks = [];
-                    for (let i = 0; i < size + 1; i++) {
-                        blocks.push(free.splice(Math.floor(Math.random() * free.length), 1)[0]);
-                    }
-                    let idxBlock = blocks.shift();
-                    disk[idxBlock] = "I";
-                    for (let b of blocks) disk[b] = id;
-                    meta[id] = { type: "Indexed", index: idxBlock, blocks: blocks };
-                    success = true;
-                }
-            }
-
-            if (success) {
-                printLog(`>> SUCCESS: File ${id} (${typeName}) allocated.`);
-                drawMap();
-            } else {
-                printLog(`!! FAILED: Disk full or fragmented for ${typeName}.`);
-            }
-        }
-
-        function formatDisk() {
-            disk = Array(100).fill('.');
-            meta = {};
-            printLog(">> WARNING: SYSTEM FORMATTED. ALL DATA CLEARED.");
-            drawMap();
-        }
-
-        function deleteFile() {
-            let id = document.getElementById('sim-id').value.toUpperCase();
-            if (!meta[id]) return printLog("!! Error: File not found.");
-
-            for (let b of meta[id].blocks) disk[b] = '.';
-            if (meta[id].type === "Indexed") disk[meta[id].index] = '.';
-
-            delete meta[id];
-            printLog(`>> SUCCESS: File ${id} deleted.`);
-            drawMap();
-        }
-
-        drawMap();
-
-        setTimeout(() => {
-            const intro = document.querySelector('.intro-section');
-            if (intro) {
-                intro.classList.add('animation-finished');
-            }
-        }, 9500); 
-    </script>
     <footer
         style="text-align: center; padding: 30px; color: #64748b; margin-top: 40px; border-top: 1px solid rgba(0, 229, 255, 0.1); font-family: monospace;">
         SYSTEM BUILD v1.0.4 | DEVELOPED BY SAINATH GAWAS | OS PROJECT 2026
