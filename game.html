@@ -52,10 +52,11 @@
         }
 
         .right-panel {
-            width: 250px;
+            width: 280px;
+            /* Slightly wider to fit the new file list comfortably */
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         h2,
@@ -92,6 +93,19 @@
             font-weight: bold;
             color: #fff;
             text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        #file-type {
+            font-size: 0.85em;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        #file-name {
+            font-family: monospace;
+            font-size: 1.1em;
         }
 
         /* Disk Grid */
@@ -177,7 +191,7 @@
             background: rgba(0, 229, 255, 0.05);
             color: var(--neon-cyan);
             border: 1px solid var(--neon-cyan);
-            padding: 12px;
+            padding: 10px;
             font-size: 1em;
             font-weight: bold;
             border-radius: 6px;
@@ -187,10 +201,15 @@
             text-align: center;
         }
 
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             background: var(--neon-cyan);
             color: #000;
             box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .btn-linked {
@@ -198,7 +217,7 @@
             color: var(--neon-purple);
         }
 
-        .btn-linked:hover {
+        .btn-linked:hover:not(:disabled) {
             background: var(--neon-purple);
             color: #fff;
             box-shadow: 0 0 15px rgba(176, 38, 255, 0.5);
@@ -209,21 +228,79 @@
             color: var(--neon-orange);
         }
 
-        .btn-indexed:hover {
+        .btn-indexed:hover:not(:disabled) {
             background: var(--neon-orange);
             color: #000;
             box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
         }
 
+        /* --- NEW: ACTIVE FILES MANAGER UI --- */
+        .file-list-container {
+            max-height: 140px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            border-radius: 6px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .file-item-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .file-item-name {
+            font-family: monospace;
+            color: #fff;
+        }
+
+        .file-item-type {
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .btn-micro {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+            border-radius: 4px;
+            padding: 4px 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: 0.2s;
+        }
+
+        .btn-micro:hover {
+            background: var(--neon-red);
+            color: #fff;
+            box-shadow: 0 0 8px rgba(255, 51, 102, 0.6);
+        }
+
         /* Game Log */
         #game-log {
-            height: 250px;
+            height: 150px;
+            /* Shortened to fit the file manager */
             overflow-y: auto;
             background: #000;
             padding: 10px;
             border-radius: 6px;
             font-family: monospace;
-            font-size: 0.9em;
+            font-size: 0.85em;
             display: flex;
             flex-direction: column;
             gap: 5px;
@@ -262,7 +339,6 @@
             z-index: 1000;
         }
 
-        /* Mission Briefing Modal */
         .briefing-box {
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--neon-cyan);
@@ -314,56 +390,60 @@
                 gap: 15px;
             }
 
-            /* Stack all panels vertically */
             .panel {
                 width: 100% !important;
-                max-width: 450px; /* Prevents them from getting too wide on tablets */
+                max-width: 450px;
                 box-sizing: border-box;
             }
 
-            .left-panel, .center-panel, .right-panel {
+            .left-panel,
+            .center-panel,
+            .right-panel {
                 align-items: stretch;
             }
 
-            /* Make the incoming file box wider on mobile */
             .incoming-box {
                 padding: 10px;
             }
+
             .file-size {
                 font-size: 2em;
             }
 
-            /* Adjust the Disk Grid so blocks remain visible */
             #disk-grid {
                 gap: 2px;
                 margin-top: 10px;
             }
 
             .block {
-                font-size: 0.9em; /* slightly smaller text so it fits */
+                font-size: 0.9em;
                 border-radius: 2px;
             }
 
-            /* Make buttons huge and thumb-friendly */
             .btn {
                 padding: 15px;
                 font-size: 1.1em;
                 margin-bottom: 5px;
             }
 
-            /* Keep log compact so it doesn't take over the screen */
-            #game-log {
-                height: 150px;
+            .file-list-container {
+                max-height: 180px;
             }
 
-            /* Fix Briefing Screen for small phones */
+            /* Give more room on mobile */
+            #game-log {
+                height: 120px;
+            }
+
             .briefing-box {
                 padding: 20px;
                 max-width: 90%;
             }
+
             .briefing-box h1 {
                 font-size: 1.5em;
             }
+
             .briefing-box h2 {
                 font-size: 1em;
             }
@@ -376,30 +456,31 @@
     <div id="start-screen" class="overlay-screen">
         <div class="briefing-box">
             <h1>TERMINAL ACCESS GRANTED</h1>
-            <h2>>>> MISSION BRIEFING: DISK ALLOCATION CHALLENGE <<< </h2>
-                    <p>Welcome, System Administrator. Files are arriving at rapid speeds. Your task is to select the
-                        most efficient allocation algorithm to store them on the physical disk.</p>
+            <h2>>>> MISSION BRIEFING: ALLOCATION CHALLENGE <<< </h2>
+                    <p>Welcome, System Administrator. Files of varying importance are arriving rapidly. Your task is to
+                        select the most efficient allocation method to store them.</p>
 
-                    <h3 style="margin-top: 20px;">RULES OF ENGAGEMENT:</h3>
+                    <h3 style="margin-top: 20px;">ALLOCATION METHODS:</h3>
                     <ul>
                         <li><strong>Objective:</strong> Reach <strong>300 points</strong> before the 60-second timer
                             expires!</li>
-                        <li><strong>Contiguous (1):</strong> Best for speed (+15 pts). Needs an unbroken line of empty
-                            blocks. Fails if memory is fragmented.</li>
-                        <li><strong>Linked (2):</strong> Flexible but slower (+12 pts). Scatters blocks into any free
-                            space.</li>
-                        <li><strong>Indexed (3):</strong> Highly efficient for gaps (+20 pts). Scatters data but
-                            requires 1 extra block to store the 'Index Map'.</li>
+                        <li><strong>Contiguous (1):</strong> Fast (+15 pts). Needs an unbroken line of empty blocks.
+                        </li>
+                        <li><strong>Linked (2):</strong> Flexible (+12 pts). Scatters blocks into any free space.</li>
+                        <li><strong>Indexed (3):</strong> Efficient (+20 pts). Scatters data but uses 1 extra index
+                            block.</li>
                     </ul>
 
-                    <h3 style="margin-top: 20px; color: var(--neon-red);">WARNINGS & STRIKES:</h3>
+                    <h3 style="margin-top: 20px; color: var(--neon-red);">PRIORITY PROTOCOLS & STRIKES:</h3>
                     <ul>
-                        <li><strong>Dynamic Deletion:</strong> Old files will occasionally be purged, leaving fragmented
-                            "gaps" in the disk. Adapt your strategy!</li>
-                        <li><strong><span class="highlight-strike">What is a Strike?</span></strong> If you attempt an
-                            allocation that fails (e.g., selecting Contiguous when the space is too fragmented, or
-                            running out of disk space), you receive a Strike and lose points.</li>
-                        <li><strong>3 Strikes = GAME OVER (SYSTEM FAILURE).</strong></li>
+                        <li><strong>Manual System Purge:</strong> If the disk is full, use the <strong>Active
+                                Files</strong> manager to selectively delete old files. <strong>Beware:</strong>
+                            Deleting a Critical file costs more points (-25) than deleting a Low priority file (-5).
+                        </li>
+                        <li><strong><span class="highlight-strike">What is a Strike?</span></strong> Attempting an
+                            allocation that fails (e.g., Contiguous in a fragmented space) results in a Strike and a -10
+                            point penalty.</li>
+                        <li><strong>3 Strikes = GAME OVER.</strong></li>
                     </ul>
 
                     <div style="text-align: center; margin-top: 30px;">
@@ -426,7 +507,8 @@
 
         <h3 style="margin-top: 20px;">Incoming Data</h3>
         <div class="incoming-box" id="inc-box">
-            <div id="file-name">SYSTEM.dat</div>
+            <div id="file-type">[CRITICAL]</div>
+            <div id="file-name">SYSTEM.dll</div>
             <div class="file-size" id="file-size">6</div>
             <div>Blocks Required</div>
         </div>
@@ -443,7 +525,12 @@
         <button class="btn btn-linked" onclick="allocate('linked')" id="btn-2" disabled>2. Linked</button>
         <button class="btn btn-indexed" onclick="allocate('indexed')" id="btn-3" disabled>3. Indexed</button>
 
-        <h3 style="margin-top: 10px;">System Log</h3>
+        <h3 style="margin-top: 15px; font-size: 1em;">Active System Files</h3>
+        <div id="active-files-list" class="file-list-container">
+            <div style="text-align: center; color: #666; font-size: 0.9em; padding: 10px;">No files allocated</div>
+        </div>
+
+        <h3 style="margin-top: 15px; font-size: 1em;">System Log</h3>
         <div id="game-log"></div>
     </div>
 
@@ -451,18 +538,28 @@
         const DISK_SIZE = 100;
         const TARGET_SCORE = 300;
         let disk = Array(DISK_SIZE).fill(null);
-        let files = [];
+        let files = []; // Tracks detailed file objects
         let score = 0;
         let strikes = 0;
         let timeLeft = 60;
         let timerInterval;
         let gameActive = false;
+        let fileIdCounter = 64;
 
-        let currentFile = { id: 'A', size: 6, name: 'SYS.dat' };
-        let fileIdCounter = 65;
-        const names = ["VIDEO.mp4", "DB_BACKUP.sql", "IMAGE.png", "SYSTEM.dll", "GAME.exe", "USER.dat", "LOGS.txt", "PAYLOAD.bin"];
+        // Data Dictionary for File Priorities
+        const fileDictionary = [
+            { name: "SYSTEM.dll", type: "CRITICAL", penalty: 25, color: "var(--neon-red)" },
+            { name: "DB_BACKUP.sql", type: "IMPORTANT", penalty: 15, color: "var(--neon-orange)" },
+            { name: "PAYLOAD.bin", type: "IMPORTANT", penalty: 15, color: "var(--neon-orange)" },
+            { name: "GAME.exe", type: "MEDIUM", penalty: 10, color: "var(--neon-cyan)" },
+            { name: "USER.dat", type: "MEDIUM", penalty: 10, color: "var(--neon-cyan)" },
+            { name: "LOGS.txt", type: "MEDIUM", penalty: 8, color: "var(--neon-cyan)" },
+            { name: "VIDEO.mp4", type: "LOW", penalty: 5, color: "#cbd5e1" },
+            { name: "IMAGE.png", type: "LOW", penalty: 5, color: "#cbd5e1" }
+        ];
 
-        // Init Empty Grid
+        let currentFile = {};
+
         const gridEl = document.getElementById('disk-grid');
         for (let i = 0; i < DISK_SIZE; i++) {
             let div = document.createElement('div');
@@ -471,18 +568,14 @@
             gridEl.appendChild(div);
         }
 
-        // START GAME FUNCTION
         function initGame() {
             document.getElementById('start-screen').style.display = 'none';
 
-            // Enable buttons
             document.getElementById('btn-1').disabled = false;
             document.getElementById('btn-2').disabled = false;
             document.getElementById('btn-3').disabled = false;
 
-            log("System booted. Memory blocks initialized.", "log-success");
-            log("Awaiting first allocation command...", "");
-
+            log("System booted. Memory initialized.", "log-success");
             generateNextFile();
 
             gameActive = true;
@@ -491,9 +584,7 @@
                 document.getElementById('time-val').innerText = `${timeLeft}s`;
                 if (timeLeft <= 10) document.getElementById('time-val').className = 'val-danger timer-text pulse';
 
-                if (timeLeft <= 0) {
-                    endGame(false, "TIME EXPIRED.");
-                }
+                if (timeLeft <= 0) endGame(false, "TIME EXPIRED.");
             }, 1000);
         }
 
@@ -527,45 +618,79 @@
             document.getElementById('score-val').innerText = `${score} / ${TARGET_SCORE}`;
             document.getElementById('strike-val').innerText = `${strikes} / 3`;
 
-            // Win/Loss conditions
             if (score >= TARGET_SCORE) endGame(true, "Target Score Reached!");
             if (strikes >= 3) endGame(false, "Maximum strikes reached.");
-            if (used === 100) endGame(false, "Disk Capacity Full.");
+        }
+
+        // NEW: Updates the task manager UI list
+        function updateActiveFilesUI() {
+            const listEl = document.getElementById('active-files-list');
+            if (files.length === 0) {
+                listEl.innerHTML = '<div style="text-align: center; color: #666; font-size: 0.9em; padding: 10px;">No files allocated</div>';
+                return;
+            }
+
+            listEl.innerHTML = '';
+            files.forEach(f => {
+                let div = document.createElement('div');
+                div.className = 'file-item';
+
+                let info = document.createElement('div');
+                info.className = 'file-item-info';
+                info.innerHTML = `
+                    <span class="file-item-name">${f.id}: ${f.name}</span>
+                    <span class="file-item-type" style="color: ${f.color}">[${f.type}]</span>
+                `;
+
+                let delBtn = document.createElement('button');
+                delBtn.className = 'btn-micro';
+                delBtn.innerText = `-${f.penalty} Pts`;
+                delBtn.onclick = () => deleteSpecificFile(f.id);
+
+                div.appendChild(info);
+                div.appendChild(delBtn);
+                listEl.appendChild(div);
+            });
         }
 
         function generateNextFile() {
             fileIdCounter++;
             if (fileIdCounter > 90) fileIdCounter = 65;
 
-            // Size 4 to 12
+            const template = fileDictionary[Math.floor(Math.random() * fileDictionary.length)];
+
             currentFile = {
                 id: String.fromCharCode(fileIdCounter),
                 size: Math.floor(Math.random() * 9) + 4,
-                name: names[Math.floor(Math.random() * names.length)]
+                name: template.name,
+                type: template.type,
+                penalty: template.penalty,
+                color: template.color
             };
+
+            const typeLabel = document.getElementById('file-type');
+            typeLabel.innerText = `[${currentFile.type}]`;
+            typeLabel.style.color = currentFile.color;
 
             document.getElementById('file-name').innerText = currentFile.name;
             document.getElementById('file-size').innerText = currentFile.size;
 
-            // Visual feedback
             const incBox = document.getElementById('inc-box');
             incBox.classList.add('pulse');
             setTimeout(() => incBox.classList.remove('pulse'), 200);
 
-            // AGGRESSIVE FRAGMENTATION EVENT
-            if (files.length > 3 && Math.random() < 0.40) {
+            // Random Purge Event
+            if (files.length > 3 && Math.random() < 0.25) {
                 let randomIndex = Math.floor(Math.random() * files.length);
                 let toDelete = files.splice(randomIndex, 1)[0];
-                let fileIdOnly = toDelete.split('-')[0];
 
                 for (let i = 0; i < DISK_SIZE; i++) {
-                    if (disk[i] && disk[i].includes(fileIdOnly)) {
-                        disk[i] = null;
-                    }
+                    if (disk[i] && disk[i].includes(toDelete.id)) { disk[i] = null; }
                 }
-                log(`[EVENT] SYSTEM PURGE: File ${fileIdOnly} removed. Fragmentation detected!`, 'log-event');
+                log(`[EVENT] SYSTEM PURGE: ${toDelete.name} removed.`, 'log-event');
                 drawDisk();
                 updateMeters();
+                updateActiveFilesUI();
             }
         }
 
@@ -584,6 +709,29 @@
                     el.className = `block ${method}`;
                 }
             }
+        }
+
+        // NEW: Specific manual deletion triggered by the UI list
+        function deleteSpecificFile(fileId) {
+            if (!gameActive) return;
+
+            let index = files.findIndex(f => f.id === fileId);
+            if (index === -1) return;
+
+            let toDelete = files.splice(index, 1)[0];
+
+            for (let i = 0; i < DISK_SIZE; i++) {
+                if (disk[i] !== null && disk[i].includes(fileId)) {
+                    disk[i] = null;
+                }
+            }
+
+            score -= toDelete.penalty;
+            log(`>> MANUAL OVERRIDE: ${toDelete.name} deleted. -${toDelete.penalty} Pts`, "log-penalty");
+
+            drawDisk();
+            updateMeters();
+            updateActiveFilesUI();
         }
 
         function allocate(method) {
@@ -607,16 +755,11 @@
                 if (success) {
                     for (let i = startIdx; i < startIdx + reqSize; i++) disk[i] = `${currentFile.id}-contiguous`;
                     score += 15;
-                    logMsg = `<span class="log-success">+15 Pts: Contiguous File Written</span>`;
+                    logMsg = `<span class="log-success">+15 Pts: Contiguous Written</span>`;
                 } else {
-                    if (freeBlocks.length >= reqSize) {
-                        strikes++;
-                        score -= 10;
-                        logMsg = `<span class="log-penalty">-10 Pts: STRIKE ${strikes}/3. Fragmentation detected. Blocks available but not sequential.</span>`;
-                    } else {
-                        strikes++;
-                        logMsg = `<span class="log-penalty">STRIKE ${strikes}/3: Not enough total space.</span>`;
-                    }
+                    strikes++;
+                    score -= 10;
+                    logMsg = `<span class="log-penalty">-10 Pts: STRIKE ${strikes}/3. Fragmentation detected or Disk Full.</span>`;
                 }
             }
             else if (method === 'linked') {
@@ -625,7 +768,7 @@
                     for (let b of shuffled) disk[b] = `${currentFile.id}-linked`;
                     score += 12;
                     success = true;
-                    logMsg = `<span class="log-success">+12 Pts: Linked Allocation Spanning Gaps</span>`;
+                    logMsg = `<span class="log-success">+12 Pts: Linked Allocation</span>`;
                 } else { strikes++; logMsg = `<span class="log-penalty">STRIKE ${strikes}/3: Disk Full.</span>`; }
             }
             else if (method === 'indexed') {
@@ -636,17 +779,27 @@
                     for (let b of shuffled) disk[b] = `${currentFile.id}-indexed`;
                     score += 20;
                     success = true;
-                    logMsg = `<span class="log-success">+20 Pts: Indexed Allocation Created (+Overhead)</span>`;
+                    logMsg = `<span class="log-success">+20 Pts: Indexed Allocation</span>`;
                 } else { strikes++; logMsg = `<span class="log-penalty">STRIKE ${strikes}/3: Disk Full.</span>`; }
             }
 
-            log(`Writing ${currentFile.id} (${currentFile.size} blks) via ${method.toUpperCase()}...`, '');
+            log(`Writing ${currentFile.id} (${currentFile.name}) via ${method.toUpperCase()}...`, '');
             log(logMsg, '');
 
-            if (success) files.push(`${currentFile.id}-${method}`);
+            if (success) {
+                files.push({
+                    id: currentFile.id,
+                    name: currentFile.name,
+                    type: currentFile.type,
+                    penalty: currentFile.penalty,
+                    color: currentFile.color
+                });
+            }
 
             drawDisk();
             updateMeters();
+            updateActiveFilesUI();
+
             if (strikes < 3 && score < TARGET_SCORE && timeLeft > 0) generateNextFile();
         }
 
